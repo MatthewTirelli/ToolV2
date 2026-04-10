@@ -28,7 +28,6 @@ except ImportError:
     pass
 
 from components.charts import (
-    baseline_gauge_figure,
     nndss_only_figure,
     ww_vs_nndss_dual_axis,
 )
@@ -62,9 +61,52 @@ p.page-sub { color: #64748b; font-size: 0.95rem; margin-bottom: 1.25rem; }
   margin-bottom: 0;
 }
 .card-tight { padding: 16px 20px; }
+/* Overview KPI row: shared rhythm; tighter than default .card; equal heights via min-height + fixed sub block. */
+.card.kpi-metric-card {
+  padding: 14px 16px 16px 16px;
+  min-height: 148px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+.card.kpi-metric-card .kpi-title {
+  margin: 0;
+  padding: 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1.25;
+  color: #64748b;
+}
+.card.kpi-metric-card .kpi-value {
+  margin: 0.4rem 0 0 0;
+  padding: 0;
+  font-size: 1.62rem;
+  font-weight: 700;
+  line-height: 1.08;
+  color: #0f172a;
+}
+.card.kpi-metric-card .kpi-sub {
+  margin: 0.35rem 0 0 0;
+  padding: 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: #94a3b8;
+  min-height: 2.8em;
+}
 .kpi-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; font-weight: 600; }
 .kpi-value { font-size: 1.85rem; font-weight: 700; color: #0f172a; margin-top: 0.35rem; line-height: 1.15; }
 .kpi-sub { font-size: 0.82rem; color: #94a3b8; margin-top: 0.35rem; }
+/* Align right rail with map chart card (below section title line + margin). */
+.overview-map-rail-spacer {
+  height: calc(0.95rem * 1.35 + 0.75rem);
+  min-height: 2.05rem;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+}
 .ai-panel-inner {
   min-height: 320px;
   max-height: 520px;
@@ -135,6 +177,76 @@ div[data-testid="column"] { min-width: 0; }
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.06) !important;
   border: 1px solid #e8ecf1 !important;
   margin-bottom: 0.75rem;
+}
+/* LLM markdown in expanders (e.g. Full briefing): consistent type scale — default Streamlit h1 is oversized */
+[data-testid="stExpander"] details .stMarkdown h1 {
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  margin: 0.65rem 0 0.4rem 0 !important;
+  color: #0f172a !important;
+  letter-spacing: -0.015em;
+}
+[data-testid="stExpander"] details .stMarkdown h2 {
+  font-size: 1.08rem !important;
+  font-weight: 600 !important;
+  line-height: 1.38 !important;
+  margin: 0.55rem 0 0.35rem 0 !important;
+  color: #0f172a !important;
+}
+[data-testid="stExpander"] details .stMarkdown h3 {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  line-height: 1.42 !important;
+  margin: 0.5rem 0 0.3rem 0 !important;
+  color: #1e293b !important;
+}
+[data-testid="stExpander"] details .stMarkdown h4,
+[data-testid="stExpander"] details .stMarkdown h5,
+[data-testid="stExpander"] details .stMarkdown h6 {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+  margin: 0.45rem 0 0.25rem 0 !important;
+  color: #334155 !important;
+}
+[data-testid="stExpander"] details .stMarkdown p {
+  font-size: 0.92rem !important;
+  line-height: 1.62 !important;
+  margin: 0.35rem 0 !important;
+  color: #475569 !important;
+}
+[data-testid="stExpander"] details .stMarkdown ul,
+[data-testid="stExpander"] details .stMarkdown ol {
+  margin: 0.35rem 0 0.55rem 0 !important;
+  padding-left: 1.2rem !important;
+  font-size: 0.92rem !important;
+  line-height: 1.55 !important;
+  color: #475569 !important;
+}
+[data-testid="stExpander"] details .stMarkdown li {
+  margin-bottom: 0.28rem !important;
+}
+[data-testid="stExpander"] details .stMarkdown hr {
+  margin: 0.85rem 0 !important;
+  border: none !important;
+  border-top: 1px solid #e2e8f0 !important;
+}
+[data-testid="stExpander"] details .stMarkdown code {
+  font-size: 0.84em !important;
+  padding: 0.1em 0.35em !important;
+  border-radius: 4px !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+[data-testid="stExpander"] details .stMarkdown pre {
+  font-size: 0.82rem !important;
+  line-height: 1.5 !important;
+  padding: 0.65rem 0.75rem !important;
+  border-radius: 8px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  overflow-x: auto !important;
 }
 </style>
 """
@@ -573,7 +685,7 @@ def main() -> None:
         with r1c1:
             sub_a = "Probability of exceeding threshold in next 4 weeks"
             st.markdown(
-                f"""<div class="card">
+                f"""<div class="card kpi-metric-card">
 <div class="kpi-title">Outbreak Alarm</div>
 <div class="kpi-value">{ap:.0%}</div>
 <div class="kpi-sub">{sub_a}</div>
@@ -583,9 +695,9 @@ def main() -> None:
         with r1c2:
             hs = kd["hi_state"]
             sc = kd["hi_score"]
-            sub_h = f"Score: {sc:.0f}" if sc is not None else ""
+            sub_h = f"Score: {sc:.0f}" if sc is not None else "\u00a0"
             st.markdown(
-                f"""<div class="card">
+                f"""<div class="card kpi-metric-card">
 <div class="kpi-title">Highest Risk State</div>
 <div class="kpi-value">{hs}</div>
 <div class="kpi-sub">{sub_h}</div>
@@ -605,7 +717,7 @@ def main() -> None:
                     sub_c = f"vs prior week: {delta:+.1f}%"
                 val = f"{lc:.0f}"
             st.markdown(
-                f"""<div class="card">
+                f"""<div class="card kpi-metric-card">
 <div class="kpi-title">Latest Case Count</div>
 <div class="kpi-value">{val}</div>
 <div class="kpi-sub">{sub_c}</div>
@@ -631,18 +743,25 @@ def main() -> None:
                 )
             fig_m.update_layout(
                 height=560,
-                margin=dict(t=40, b=24, l=0, r=0),
+                margin=dict(t=40, b=168, l=0, r=0),
                 paper_bgcolor="rgba(0,0,0,0)",
             )
             st.plotly_chart(fig_m, use_container_width=True, key="overview_map")
 
         with col_base:
+            st.markdown('<div class="overview-map-rail-spacer" aria-hidden="true"></div>', unsafe_allow_html=True)
             with st.expander("Baseline risk & model detail", expanded=False):
-                if d:
-                    v = float(d.get("baseline_val", 0))
-                    st.plotly_chart(baseline_gauge_figure(v), use_container_width=True)
-                else:
-                    st.plotly_chart(baseline_gauge_figure(0), use_container_width=True)
+                st.markdown(
+                    """
+**Data sources** — National weekly measles case counts (NNDSS-based pipeline), wastewater surveillance, kindergarten MMR coverage, and week-of-year (seasonality).
+
+**Alarm probability** — One model combines those inputs into a single probability of elevated national concern. The number shown is **logistic regression** on the **latest week** (median-imputed, standardized features), estimating the chance national activity exceeds a data-driven outbreak threshold **within four weeks**.
+
+**Baseline risk** — Compares the mean weekly case baseline (from the recent national trend) to the median weekly national case count from NNDSS excluding the most recent 12 weeks.
+
+*Download summary CSV* exports headline metrics.
+"""
+                )
 
                 def _overview_csv() -> str:
                     buf = io.StringIO()
@@ -662,69 +781,6 @@ def main() -> None:
                     mime="text/csv",
                 )
 
-                st.markdown("##### How is alarm probability calculated?")
-                coef_df = d.get("coef_df") if d else None
-                st.markdown(
-                    "**Inputs used:** Recent national cases, wastewater trend (prior 8–12 weeks of detection data), "
-                    "kindergarten MMR coverage (national), and week of year (seasonality)."
-                )
-                if coef_df is not None and not coef_df.empty:
-                    pos = coef_df[coef_df["coefficient"] > 0].sort_values("coefficient", ascending=False)
-                    neg = coef_df[coef_df["coefficient"] < 0].sort_values("coefficient", ascending=True)
-                    if not pos.empty:
-                        st.markdown(
-                            "**Top positive drivers** (push alarm up): "
-                            + ", ".join(
-                                [f"{r['feature']} ({r['coefficient']:.2f})" for _, r in pos.head(3).iterrows()]
-                            )
-                            + "."
-                        )
-                    if not neg.empty:
-                        st.markdown(
-                            "**Top negative drivers** (push alarm down): "
-                            + ", ".join(
-                                [f"{r['feature']} ({r['coefficient']:.2f})" for _, r in neg.head(3).iterrows()]
-                            )
-                            + "."
-                        )
-                    st.dataframe(coef_df, use_container_width=True, hide_index=True)
-                st.markdown(
-                    "**Plain language:** Risk increases when recent wastewater levels are higher, when kindergarten coverage is lower, "
-                    "or when the time of year is typically associated with more cases. The model combines these into a single probability."
-                )
-
-                st.markdown("##### How is baseline risk/score calculated?")
-                from risk import get_baseline_risk_components
-
-                nndss = d.get("nndss") if d else None
-                nndss = nndss if nndss is not None else pd.DataFrame()
-                comp = get_baseline_risk_components(nndss)
-                st.markdown(
-                    "**Inputs used:** National **weekly** measles cases from NNDSS (pipeline aggregation) and the same "
-                    "**Stage 2 recency-weighted baseline projection** used elsewhere in the dashboard."
-                )
-                st.markdown(
-                    "**Baseline risk** compares the **projection baseline** (mean weekly cases implied by the Stage 2 model) "
-                    "to a **reference** median of weekly cases from **earlier** NNDSS weeks (the latest 12 weeks are excluded "
-                    "when there is enough history). The **ratio** (projection baseline ÷ reference median) sets the tier and 0–100 score."
-                )
-                st.markdown(
-                    f"Projection baseline (mean weekly cases): **{comp.get('projection_baseline_weekly', '—')}**. "
-                    f"Reference median (earlier weeks): **{comp.get('reference_median_weekly', '—')}**. "
-                    f"Ratio: **{comp.get('ratio', '—')}**."
-                    + (
-                        f" Recent-week volatility (Stage 2): **{comp.get('recent_std')}**."
-                        if comp.get("recent_std") is not None
-                        else ""
-                    )
-                )
-                if comp.get("formula"):
-                    st.markdown(comp["formula"])
-                st.markdown(
-                    "**Plain language:** When the short-horizon baseline sits well above a typical pre-recent week, "
-                    "the baseline score rises toward medium or high tier."
-                )
-
         st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
         st.markdown('<p class="section-title">AI report</p>', unsafe_allow_html=True)
         gen = st.button(
@@ -734,7 +790,6 @@ def main() -> None:
             key="btn_multi_agent",
             disabled=not d,
         )
-        st.caption("Multi-agent pipeline (OpenAI + Census). Requires `OPENAI_API_KEY` in `.env`.")
 
         if gen and d:
             st.session_state.multi_agent_error = None
@@ -760,10 +815,6 @@ def main() -> None:
         top3 = _sorted_top_states_for_ui(a2, limit=3, exclude=frozenset({"FL", "UT"}))
 
         if ma:
-            st.caption(
-                f"{_snapshot_tier_badge(ma)} · Nat avg /100k: {_national_avg_cpk_str(ma)} · "
-                f"Forecast: {_forecast_cases_week_str(d)}"
-            )
             if top3:
                 inf, war = _callout_info_warning(top3)
                 if inf:
@@ -798,6 +849,13 @@ def main() -> None:
             with st.expander("Full briefing (expand)", expanded=False):
                 st.markdown((ma.get("agent3") or {}).get("assistant_text") or "—")
 
+            st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+            st.caption(
+                f"{_snapshot_tier_badge(ma)} · Nat avg /100k: {_national_avg_cpk_str(ma)} · "
+                f"Forecast: {_forecast_cases_week_str(d)}"
+            )
+            st.caption("Multi-agent pipeline (OpenAI + Census). Requires `OPENAI_API_KEY` in `.env`.")
+
         elif d:
             st.markdown(
                 '<div class="card"><div class="ai-panel-inner">'
@@ -806,6 +864,8 @@ def main() -> None:
                 "</div></div>",
                 unsafe_allow_html=True,
             )
+            st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+            st.caption("Multi-agent pipeline (OpenAI + Census). Requires `OPENAI_API_KEY` in `.env`.")
 
     with tab_analysis:
         ychoices = _ww_year_choices(d)
@@ -911,7 +971,11 @@ def main() -> None:
             kw = kw.copy()
             kw["coverage"] = pd.to_numeric(kw[pc], errors="coerce")
             fig_kg = kindergarten_coverage_map_figure(kw, sc, "coverage")
-            fig_kg.update_layout(height=520, paper_bgcolor="rgba(0,0,0,0)")
+            fig_kg.update_layout(
+                height=520,
+                margin=dict(l=0, r=0, t=40, b=158),
+                paper_bgcolor="rgba(0,0,0,0)",
+            )
             st.plotly_chart(fig_kg, use_container_width=True, key="kg_map")
 
         if kw is not None and not kw.empty and pc and sc:

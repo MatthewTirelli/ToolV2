@@ -75,11 +75,23 @@ def state_risk_map_figure(
         hovertext=hover_texts,
     )
     fig.update_geos(scope="usa", showlakes=True, lakecolor="rgb(255,255,255)")
+    # Horizontal colorbar sits below the map (paper y < 0) so the geo stays full-size; bottom margin reserves space.
     fig.update_layout(
-        title="State risk score by state",
+        title=dict(text="State risk score by state", x=0, xanchor="left"),
         height=420,
-        margin=dict(l=0, r=0, t=50, b=0),
-        coloraxis_colorbar=dict(title="Risk score", tickformat="d"),
+        margin=dict(l=0, r=0, t=50, b=128),
+        coloraxis_colorbar=dict(
+            title="Risk score",
+            tickformat="d",
+            orientation="h",
+            yanchor="top",
+            y=-0.10,
+            xanchor="center",
+            x=0.5,
+            len=0.78,
+            thickness=16,
+            outlinewidth=0,
+        ),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(size=12, color="#334155"),
@@ -123,7 +135,6 @@ def kindergarten_coverage_map_figure(
         color="coverage",
         scope="usa",
         color_continuous_scale="Blues",
-        title="Kindergarten MMR coverage % by state",
         custom_data=["hover_text"],
         range_color=range_color,
     )
@@ -141,11 +152,26 @@ def kindergarten_coverage_map_figure(
                 hoverlabel=dict(bgcolor="white", font=dict(color="black")),
             )
         )
+    fig.update_geos(scope="usa", showlakes=True, lakecolor="rgb(255,255,255)")
+    # Horizontal colorbar below map (same pattern as state risk map) — avoids right-edge clipping in Streamlit.
     fig.update_layout(
+        title=dict(text="Kindergarten MMR coverage % by state", x=0, xanchor="left"),
         height=400,
-        margin=dict(l=0, r=0, t=40, b=0),
+        margin=dict(l=0, r=0, t=50, b=120),
+        coloraxis_colorbar=dict(
+            title="Coverage %",
+            tickformat=".0f",
+            orientation="h",
+            yanchor="top",
+            y=-0.10,
+            xanchor="center",
+            x=0.5,
+            len=0.78,
+            thickness=16,
+            outlinewidth=0,
+        ),
         paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
         font=dict(size=12, color="#334155"),
-        coloraxis_colorbar=dict(title="Coverage %"),
     )
     return fig
