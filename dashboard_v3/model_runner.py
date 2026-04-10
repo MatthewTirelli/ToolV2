@@ -69,7 +69,7 @@ def load_and_model(use_cache: bool = True, outbreak_percentile: float = 95.0) ->
     baseline_tier = "low"
     baseline_val = 0.0
     try:
-        baseline_tier, baseline_val = get_baseline_risk(hist, nndss)
+        baseline_tier, baseline_val = get_baseline_risk(nndss)
     except Exception:
         baseline_tier = "low"
         baseline_val = 0.0
