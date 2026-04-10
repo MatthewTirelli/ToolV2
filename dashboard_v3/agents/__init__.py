@@ -1,4 +1,4 @@
-"""Standalone agents for state-level measles risk (not wired into Streamlit app yet)."""
+"""Standalone agents for state-level measles risk (Streamlit wiring optional)."""
 
 from __future__ import annotations
 
@@ -12,9 +12,17 @@ __all__ = [
     "SYSTEM_PROMPT",
     "STATE_RISK_TOOL_NAME",
     "STATE_RISK_TOOLS",
+    "CENSUS_TOOL_NAME",
+    "CENSUS_TOOLS",
+    "REPORT_CONTEXT_TOOL_NAME",
+    "REPORT_CONTEXT_TOOLS",
     "compute_state_risk_snapshot",
     "execute_state_risk_tool",
+    "execute_census_tool",
+    "execute_report_context_tool",
     "run_state_risk_forecaster",
+    "run_measles_multi_agent_pipeline",
+    "build_agent2_enrichment",
     "snapshot_to_json",
 ]
 
@@ -29,6 +37,14 @@ _LAZY = {
     "STATE_RISK_TOOL_NAME": ("state_risk_tools", "STATE_RISK_TOOL_NAME"),
     "STATE_RISK_TOOLS": ("state_risk_tools", "STATE_RISK_TOOLS"),
     "execute_state_risk_tool": ("state_risk_tools", "execute_state_risk_tool"),
+    "CENSUS_TOOL_NAME": ("census_tools", "CENSUS_TOOL_NAME"),
+    "CENSUS_TOOLS": ("census_tools", "CENSUS_TOOLS"),
+    "execute_census_tool": ("census_tools", "execute_census_tool"),
+    "REPORT_CONTEXT_TOOL_NAME": ("report_context_tools", "REPORT_CONTEXT_TOOL_NAME"),
+    "REPORT_CONTEXT_TOOLS": ("report_context_tools", "REPORT_CONTEXT_TOOLS"),
+    "execute_report_context_tool": ("report_context_tools", "execute_report_context_tool"),
+    "run_measles_multi_agent_pipeline": ("measles_multi_agent", "run_measles_multi_agent_pipeline"),
+    "build_agent2_enrichment": ("measles_multi_agent", "build_agent2_enrichment"),
 }
 
 

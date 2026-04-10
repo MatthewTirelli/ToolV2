@@ -7,9 +7,15 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-def state_risk_map_figure(sr: pd.DataFrame) -> go.Figure:
+def state_risk_map_figure(
+    sr: pd.DataFrame,
+    enrichment_by_abbr: dict | None = None,
+) -> go.Figure:
     """
-    US choropleth: color by risk_score, blue gradient, hover: state + rounded score.
+    US choropleth: color by risk_score, blue gradient.
+    Hover: state + score; optional enrichment adds narrative + confidence (Agent 2 JSON).
+    ``enrichment_by_abbr``: maps USPS code (e.g. ``\"CO\"``) to dict with
+    ``risk_narrative``, ``confidence_label``, optional ``risk_score`` display.
     """
     from utils.state_maps import state_to_abbr
 
@@ -49,12 +55,24 @@ def state_risk_map_figure(sr: pd.DataFrame) -> go.Figure:
             [1, "#1e3a8a"],
         ],
     )
+
+    hover_texts: list[str] = []
+    for _, row in d.iterrows():
+        abbr = str(row["abbr"])
+        st_name = str(row["state"])
+        sc = str(int(row["_hover_score"]))
+        base = f"<b>{st_name}</b><br>Risk score: {sc}"
+        if enrichment_by_abbr:
+            e = enrichment_by_abbr.get(abbr) or enrichment_by_abbr.get(abbr.upper())
+            if isinstance(e, dict):
+                nar = e.get("risk_narrative") or "—"
+                conf = e.get("confidence_label") or "—"
+                base += f"<br>Narrative: {nar}<br>Confidence: {conf}"
+        hover_texts.append(base)
+
     fig.update_traces(
-        hovertemplate="<b>%{customdata[0]}</b><br>Risk score: %{customdata[1]}<extra></extra>",
-        customdata=np.stack(
-            (d["state"].astype(str), d["_hover_score"].astype(str)),
-            axis=-1,
-        ),
+        hovertemplate="%{hovertext}<extra></extra>",
+        hovertext=hover_texts,
     )
     fig.update_geos(scope="usa", showlakes=True, lakecolor="rgb(255,255,255)")
     fig.update_layout(
