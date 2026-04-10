@@ -246,6 +246,9 @@ def load_wastewater(use_cache: bool = True) -> Tuple[pd.DataFrame, str]:
             df = df[df["pcr_target"].astype(str).str.strip() == pcr_filter_val].copy()
         if not df.empty:
             logger.info("wastewater raw columns: %s", list(df.columns))
+            # CDC akvg-8vrb names the plant jurisdiction state_territory; align with code expecting wwtp_jurisdiction.
+            if "wwtp_jurisdiction" not in df.columns and "state_territory" in df.columns:
+                df = df.rename(columns={"state_territory": "wwtp_jurisdiction"})
             # Audit: confirm required fields for detection pipeline (akvg-8vrb)
             has_site = "site_id" in df.columns or "sewershed_id" in df.columns or "sample_id" in df.columns
             has_conc = "pcr_target_avg_conc" in df.columns

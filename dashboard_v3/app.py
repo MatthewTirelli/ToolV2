@@ -472,24 +472,33 @@ def main() -> None:
             st.markdown("##### How is baseline risk/score calculated?")
             from risk import get_baseline_risk_components
 
-            hist = d.get("hist") if d else None
             nndss = d.get("nndss") if d else None
-            hist = hist if hist is not None else pd.DataFrame()
             nndss = nndss if nndss is not None else pd.DataFrame()
-            comp = get_baseline_risk_components(hist, nndss)
-            st.markdown("**Inputs used:** Historical national annual cases (CSV) and recent NNDSS weekly national cases.")
+            comp = get_baseline_risk_components(nndss)
             st.markdown(
-                "**Baseline risk** compares **recent** measles case levels to **historical** (annual national cases from the CSV). "
-                "We take the **average of the last 5 years** and the **overall average**; the **ratio** (recent ÷ overall) determines the tier and score."
+                "**Inputs used:** National **weekly** measles cases from NNDSS (pipeline aggregation) and the same "
+                "**Stage 2 recency-weighted baseline projection** used elsewhere in the dashboard."
             )
             st.markdown(
-                f"Recent 5-year average: **{comp.get('recent_5yr_avg', '—')}**. "
-                f"Overall average: **{comp.get('overall_avg', '—')}**. Ratio: **{comp.get('ratio', '—')}**."
+                "**Baseline risk** compares the **projection baseline** (mean weekly cases implied by the Stage 2 model) "
+                "to a **reference** median of weekly cases from **earlier** NNDSS weeks (the latest 12 weeks are excluded "
+                "when there is enough history). The **ratio** (projection baseline ÷ reference median) sets the tier and 0–100 score."
+            )
+            st.markdown(
+                f"Projection baseline (mean weekly cases): **{comp.get('projection_baseline_weekly', '—')}**. "
+                f"Reference median (earlier weeks): **{comp.get('reference_median_weekly', '—')}**. "
+                f"Ratio: **{comp.get('ratio', '—')}**."
+                + (
+                    f" Recent-week volatility (Stage 2): **{comp.get('recent_std')}**."
+                    if comp.get("recent_std") is not None
+                    else ""
+                )
             )
             if comp.get("formula"):
                 st.markdown(comp["formula"])
             st.markdown(
-                "**Plain language:** Higher recent case levels relative to history mean a higher baseline score and medium or high tier."
+                "**Plain language:** When the short-horizon baseline sits well above a typical pre-recent week, "
+                "the baseline score rises toward medium or high tier."
             )
 
     with tab_analysis:
