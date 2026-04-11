@@ -33,7 +33,7 @@ def baseline_gauge_figure(baseline_val: float) -> go.Figure:
 
 def historical_annual_figure(hist: pd.DataFrame) -> go.Figure:
     if hist is None or hist.empty:
-        return go.Figure(layout_title_text="No historical data")
+        return go.Figure().update_layout(title_text="No historical data")
     case_col = "Measles Cases" if "Measles Cases" in hist.columns else hist.columns[1]
     xcol = hist.columns[0]
     fig = px.line(hist, x=xcol, y=case_col, title="National annual measles cases (historical CSV)")
@@ -43,7 +43,7 @@ def historical_annual_figure(hist: pd.DataFrame) -> go.Figure:
 
 def nndss_weekly_figure(agg: pd.DataFrame) -> go.Figure:
     if agg is None or agg.empty:
-        return go.Figure(layout_title_text="No NNDSS weekly data")
+        return go.Figure().update_layout(title_text="No NNDSS weekly data")
     d = agg.copy()
     d["year"] = pd.to_numeric(d["year"], errors="coerce")
     d["year_week"] = (

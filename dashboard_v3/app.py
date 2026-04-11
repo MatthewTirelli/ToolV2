@@ -917,8 +917,9 @@ def main() -> None:
             if not mo.empty:
                 fig_ww = nndss_only_figure(mo)
             else:
-                fig_ww = go.Figure(
-                    layout_title_text="No chart — adjust year filters or wait for overlapping WW + NNDSS weeks",
+                fig_ww = go.Figure()
+                fig_ww.update_layout(
+                    title_text="No chart — adjust year filters or wait for overlapping WW + NNDSS weeks",
                     height=520,
                 )
         fig_ww.update_layout(height=520, paper_bgcolor="rgba(0,0,0,0)")
@@ -963,7 +964,10 @@ def main() -> None:
         sc = kx["state_col"]
         if kw is None or kw.empty or not pc:
             st.plotly_chart(
-                go.Figure(layout_title_text="No kindergarten coverage data", height=520),
+                go.Figure().update_layout(
+                    title_text="No kindergarten coverage data",
+                    height=520,
+                ),
                 use_container_width=True,
                 key="kg_map",
             )
