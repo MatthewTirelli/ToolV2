@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "locale": ".UTF-8",
+  "metadata": {
+    "appmode": "python-streamlit",
+    "entrypoint": "app"
+  },
+  "python": {
+    "version": "3.8.5",
+    "package_manager": {
+      "name": "pip",
+      "version": "25.0.1",
+      "package_file": "requirements.txt"
+    }
+  },
+  "files": {
+    "requirements.txt": {
+      "checksum": "e9f8357c9530cd7cd9a599bfbc8f6444"
+    },
+    ".streamlit/config.toml": {
+      "checksum": "9bbdf78a18970ee7014b6d45e62ee40a"
+    },
+    "__init__.py": {
+      "checksum": "e7e939f1fd15d8529665b2781579477c"
+    },
+    "agents/INTEGRATION.md": {
+      "checksum": "27cb59e0101d3df9f260229c72970c49"
+    },
+    "agents/README.md": {
+      "checksum": "3cd481ded83a7720f9ae12309ecbb20c"
+    },
+    "agents/__init__.py": {
+      "checksum": "007eedee37829ea4a798937307bf3ebb"
+    },
+    "agents/census_acs.py": {
+      "checksum": "5f3a684d2aba21d9517d994c7ebacf48"
+    },
+    "agents/census_tools.py": {
+      "checksum": "b92018a69a8aae7ee3fc659d132876be"
+    },
+    "agents/measles_multi_agent.py": {
+      "checksum": "89aea394514b671f726c77d650728d22"
+    },
+    "agents/openai_state_risk_agent.py": {
+      "checksum": "db5f8217d85066803c1891ecf2264cb5"
+    },
+    "agents/report_context_tools.py": {
+      "checksum": "011fc14ea37be38b830953c78f3ae74b"
+    },
+    "agents/state_risk_snapshot.py": {
+      "checksum": "620a2236d4b3800a1bafdcc40599c73e"
+    },
+    "agents/state_risk_tools.py": {
+      "checksum": "d2724c54012b113102a7ace8f618ae09"
+    },
+    "app.py": {
+      "checksum": "9901e68b0ed7895328ecdeae68064cc4"
+    },
+    "components/__init__.py": {
+      "checksum": "fee0e2ae5959d01d07ed8d7748d6d503"
+    },
+    "components/charts.py": {
+      "checksum": "9d331f1b0dcfb624508235493995733e"
+    },
+    "components/kpi_card.py": {
+      "checksum": "db06cade7e281c9a97a45932653b0232"
+    },
+    "components/map.py": {
+      "checksum": "a43910a6f7447e230441366fae5773d8"
+    },
+    "kg_helpers.py": {
+      "checksum": "a0ea73c970668c8c33b1bab2f57d0cc0"
+    },
+    "loaders.py": {
+      "checksum": "6828bd0444a7e5636a87802c5149a964"
+    },
+    "measles_annual_1985.csv": {
+      "checksum": "ba8d79be430ac35c61d2bceb3bc7d5d5"
+    },
+    "model_runner.py": {
+      "checksum": "8ac8ac67712fe3d41edeff481c91aec8"
+    },
+    "ollama_client.py": {
+      "checksum": "df0776330a6e92188b60d81b2ab92fc4"
+    },
+    "risk.py": {
+      "checksum": "4d6043416b5eeb08c81e248b7a1232a2"
+    },
+    "run_app.sh": {
+      "checksum": "7920b0ee3ca09c32d2ae7a2667bb6dd3"
+    },
+    "scripts/debug_alarm_pipeline.py": {
+      "checksum": "c9b777df16d51a2e40cb76db5d8fbad8"
+    },
+    "scripts/debug_state_risk_wi.py": {
+      "checksum": "e55c81ecdd1acd329e140ffece9c4355"
+    },
+    "scripts/run_measles_multi_agent.py": {
+      "checksum": "b2c7070b8b4e881eae62f9e23d10ae9c"
+    },
+    "scripts/run_state_risk_agent_demo.py": {
+      "checksum": "eb1c9f8908d69291ab5d7f42471a6402"
+    },
+    "technical_documentation.md": {
+      "checksum": "8c922b706ef31ef971467ffa4dee3679"
+    },
+    "utils/__init__.py": {
+      "checksum": "5a7d77572defc9fd161efc3d86746c9e"
+    },
+    "utils/logging_config.py": {
+      "checksum": "1b4a2283c1fa93a5ad35cc4dd73e2df8"
+    },
+    "utils/state_maps.py": {
+      "checksum": "34612fb1070ca4ce90b51fc5ce3fa1f3"
+    }
+  }
+}
