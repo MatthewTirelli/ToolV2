@@ -14,7 +14,7 @@
 
 ### 1.2 End-to-end workflow
 
-1. **Data ingestion** — `load_all()` / `load_and_model()`: historical CSV (national annual); CDC **Socrata** datasets for kindergarten MMR (`ijqb-a7ye`), wastewater measles (`akvg-8vrb`), NNDSS measles (`x9gk-5huc`). Token: `SOCRATA_APP_TOKEN`.
+1. **Data ingestion** — `load_all()` / `load_and_model()`: CDC **Socrata** datasets for kindergarten MMR (`ijqb-a7ye`), wastewater measles (`akvg-8vrb`), NNDSS measles (`x9gk-5huc`). Token: `SOCRATA_APP_TOKEN`. A **historical annual CSV** (`measles_annual_1985.csv` via `load_historical`) is still loaded and reflected in `load_status`, but **`hist` is not used** by `risk.py` scoring, the multi-agent tools, or the current `app.py` UI (`historical_annual_figure` in `components/charts.py` is not imported).
 2. **Risk scoring (unchanged core)** — `risk.py`: Stage-1 logistic alarm (national, 4-week horizon features); baseline tier; `get_state_risk_df` composite index (coverage + cases + wastewater components); forecast helper where data allow.
 3. **Enrichment** — For states in top/bottom cohorts: merge ACS population → **`cases_per_100k`**; compare to cohort/national averages → **`delta_vs_national`**; label dominant signal from existing point columns → **`signal_dominance`**; completeness + wastewater presence → **`confidence_score`** / **`confidence_label`**. These fields **annotate** the risk table; they **do not** re-fit or alter the composite risk model.
 4. **Report generation** — `build_precomputed_payload` assembles national + Agent 1 snapshot summary + Agent 2 JSON + fixed disclaimer text. Agent 3 must call `get_precomputed_report_inputs` (returns that payload) before emitting narrative.
@@ -34,14 +34,12 @@
 ```mermaid
 flowchart TD
     subgraph sources [Raw sources]
-        CSV[Historical CSV]
         Socrata[CDC Socrata API<br/>kindergarten / wastewater / NNDSS]
     end
 
-    CSV --> LM[load_and_model]
-    Socrata -->|POST query.json + app token| LM
+    Socrata -->|POST query.json + app token| LM[load_and_model]
 
-    LM --> CORE[risk.py: alarm, forecast,<br/>state_risk_df]
+    LM --> CORE[risk.py: alarm, forecast,<br/>state_risk_df from KG, WW, NNDSS]
 
     CORE --> UI[Streamlit: KPIs, charts, state map]
 
@@ -103,7 +101,7 @@ There is **no embedding store or vector retrieval**. Grounding is **deterministi
 dashboard_v3/
   app.py                 # Streamlit entry, UI, multi-agent trigger
   model_runner.py        # load_and_model orchestration
-  loaders.py             # CDC Socrata + historical CSV
+  loaders.py             # CDC Socrata + optional historical CSV load
   risk.py                # Core scoring, state index, Stage-1 model
   agents/
     measles_multi_agent.py   # Three-stage pipeline wiring
