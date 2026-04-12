@@ -129,8 +129,8 @@ dashboard_v3/
 
 ## 5. Usage instructions (grader-oriented)
 
-- **Deployed app URL:** *[Placeholder — not deployed yet.]*
-- **Login:** None assumed for the Streamlit app as implemented.
+- **Deployed app URL:** [Measles risk dashboard (Posit Connect Cloud)](https://019d7eb4-fcb0-5533-9416-f226bbe451c8.share.connect.posit.cloud)
+- **Login:** Not required for this deployment (open access).
 - **On load:** Sidebar shows data source status and “Data as of” timestamp; main area shows national KPIs (alarm, highest-risk state, latest cases), tabs (Overview / Analysis), and a state risk map.
 - **AI briefing:** Click **“Generate AI briefing”** after data load. Requires `OPENAI_API_KEY`. On success, enriched top-state cards and a markdown report appear in the AI section.
 
