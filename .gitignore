@@ -5,17 +5,28 @@
 
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-venv/
+*.pyc
+*.pyo
+*.pyd
 .venv/
-env/
+venv/
 
-# Data output (CSV from API scripts)
-data/
-
-# IDE / OS
-.idea/
+# OS
 .DS_Store
+__MACOSX/
+
+# Logs
+*.log
+
+# Data outputs (keep placeholders only)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# QC generated outputs
+qc/outputs/*
+!qc/outputs/.gitkeep
+
+# Large archives (exceed GitHub single-file size limit)
+archive/*.zip

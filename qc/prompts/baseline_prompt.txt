@@ -1,0 +1,30 @@
+Call get_precomputed_report_inputs first. Then write a markdown briefing with these sections IN ORDER:
+
+## Executive summary
+3–5 tight bullets. National alarm/baseline/forecast from payload only.
+
+## National outlook and short-horizon forecast
+Short paragraph(s). Format numbers: rates to **2 decimals**, percentages to **1 decimal**, risk scores to **1 decimal**.
+
+## Normalized risk context
+2–4 bullets comparing the **top cohort in aggregate** (not per-state cards) using **cases_per_100k**, **delta_vs_national**, and **agent2.summary_stats.national_avg_cases_per_100k**. Do **not** repeat per-state risk narratives, tiers, or scores—the dashboard UI already shows compact top-state cards. No correlation language.
+
+## Population context (descriptive only)
+At most 3 bullets using **population_bucket** only if helpful. No inference.
+
+## Demographic note
+Single sentence: "Demographic data are included for context only and are not used in risk scoring." Do not list % white or income correlations.
+
+## Data gaps and reliability
+Bullets: which states in the enriched top cohort have **data_completeness_flag** partial or **Low** confidence—keep brief, no full card-style repeats.
+
+## Low-risk baseline states
+One short paragraph describing the lowest-risk **cohort** in aggregate. Do **not** enumerate state codes. Do not restate the dashboard's short bullet summary verbatim.
+
+## What to watch next
+Exactly 3 short bullets: operational watch items only. Do not copy the dashboard's fixed bullet text word-for-word; paraphrase the same ideas (wastewater-led signals, above-national burden, low-confidence caveats).
+
+## Limitations and disclaimer
+Include payload disclaimer; keep brief.
+
+RULES: No Pearson/correlation/% white. No duplicated stats. No raw long floats—always round as specified. No "prioritization framework" section. No "## Top states" section and no per-state card blocks.

@@ -1,16 +1,29 @@
-# ai-data-science-team-w
+# ToolV2 Measles Risk Dashboard
 
-Repository for Sysen 5381.
+Cleaned repository layout for the Streamlit app and multi-agent pipeline.
 
-## Project Structure
+## Run the app
 
-| Folder | Contents |
-|--------|----------|
-| **Shiny App V0** | Original Shiny app (app.R, setup docs) |
-| **Shiny App V1** | API scripts, requirements.txt, measles data, test script |
-| **Research and API Information** | [Dataset documentation](Research%20and%20API%20Information/README.md), data dictionaries, API reference markdown |
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run app/main.py
+```
 
-## Quick Start
+## Run the agent pipeline
 
-- **Run CDC API scripts:** See `Shiny App V1/` — requires `SOCRATA_APP_TOKEN` in `.env` at project root.
-- **Dataset overview:** [Research and API Information/README.md](Research%20and%20API%20Information/README.md)
+```bash
+python scripts/run_measles_multi_agent.py --dry-run
+python scripts/run_measles_multi_agent.py
+```
+
+## Repository layout
+
+- `app/`: Streamlit UI, modeling, loaders, shared app utils
+- `agents/`: state risk agent, enrichment/report pipeline, tool adapters
+- `data/reference/`: checked-in reference data
+- `scripts/`: runnable CLI entry points
+- `qc/outputs/`: reserved output folder (git-ignored contents)
+- `docs/`: inventory and migration notes
+- `archive/`: legacy and non-active artifacts retained for reproducibility
