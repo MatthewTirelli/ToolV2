@@ -1,0 +1,31 @@
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# OS
+.DS_Store
+__MACOSX/
+
+# Logs
+*.log
+
+# Data outputs (keep placeholders only)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# QC: keep batch run artifacts in version control; ignore local live-validation dumps only
+qc/outputs/live_validation_debug/
+
+# Large archives (exceed GitHub single-file size limit)
+archive/*.zip

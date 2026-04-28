@@ -1,0 +1,57 @@
+You are producing the FINAL measles briefing. Use ONLY the provided structured input JSON.
+
+Hard constraints:
+1) Do not invent states, values, trends, or confidence labels.
+2) Preserve numeric fidelity for validator fields: use the exact structured values defined below. Do not substitute model components, risk scores, points, cases per 100k, cohort averages, or other derived metrics for those fields.
+3) Include the top 3 states by risk_rank from input `agent2.top_states_enriched` (or equivalent top_states list), in rank order.
+4) Preserve each state's `confidence_label` exactly as in JSON (casing and wording).
+5) If `confidence_score` is present for a top state, the report must contain that exact numeric value (e.g. 1.0, 0.4) so it can be matched literally.
+6) Include a Limitations section.
+7) If any top state has confidence_label = "low" or "moderate" (or "medium"), explicitly communicate uncertainty in Limitations.
+8) Do not introduce confidence claims for states without confidence fields in the structured input.
+
+Numeric fidelity (top 3 states only)
+- **case_count** must match structured field **`cases_recent`** for that state (integer as provided). Do not replace it with risk scores, component points, cases per 100k, ranks, or any other number.
+- **mmr_coverage** must match structured field **`coverage`** for that state. You may display it rounded to **one decimal** only (e.g. 90.586… → **90.6**). Do not use a different percentage or rate from the payload in its place.
+- **wastewater_signal** must match structured **`signal_dominance`** or **`ww_recent`** (whichever appears for that row)—copy the string exactly (e.g. `Wastewater-driven`, `Case-driven`).
+- **risk_level** in prose/table must match **`risk_tier`** or **`risk_narrative`** from structured input for that state—use the same wording.
+
+Do not:
+- Substitute derived values for case_count or mmr_coverage.
+- Use percentages or rates from summary_stats, cohort medians, or other states in place of the top state's coverage or cases.
+- Invent numeric values not present in the structured JSON for that field.
+- If a required structured field is null or missing, write **Data not available.** for that cell (and do not invent a number).
+
+Required compact table (MUST appear under "## Highest Risk States")
+Immediately after the `## Highest Risk States` heading, include **only** an optional one-line intro (no numbers in that line), then this **markdown table** as the first structured block. Use exactly these columns and one row per top-3 state in risk_rank order:
+
+| State | Risk level | Case count | MMR coverage (%) | Wastewater signal | Confidence label | Confidence score |
+| --- | --- | ---: | ---: | --- | --- | ---: |
+
+Rules for the table:
+- **State**: two-letter code from JSON.
+- **Risk level**: exact `risk_tier` or `risk_narrative` string from JSON.
+- **Case count**: exact integer from **`cases_recent`** (same value the validator treats as case_count).
+- **MMR coverage (%)**: value from **`coverage`**, shown with at most one decimal if rounding is needed.
+- **Wastewater signal**: exact string from **`signal_dominance`** or **`ww_recent`**.
+- **Confidence label**: exact `confidence_label` from JSON.
+- **Confidence score**: numeric `confidence_score` from JSON, or **Data not available.** if absent.
+
+Concision
+- The table carries the exact numeric facts for the top three states; keep it to three data rows plus header.
+- In **## Key Grounded Insights** and **## Conclusion**, summarize qualitatively. Do **not** add new numeric literals there except you may repeat **only** values already printed in the table above or verbatim national-level numbers you already stated in **## National Overview** from `national` / alarm fields in the JSON (do not fabricate digits).
+- Avoid listing extra statistics (income %, cohort averages, other states' case rates, model point breakdowns) as numbers in those sections—they are not used for case_count/mmr_coverage matching and inflate unrelated numerals in the report.
+
+All required section headers MUST appear exactly as written below.
+Failure to include any required section is considered invalid.
+
+## National Overview
+## Highest Risk States
+## Key Grounded Insights
+## Limitations
+## Conclusion
+
+Write concise markdown. No extra sections.
+
+Structured input JSON:
+{structured_input_json}

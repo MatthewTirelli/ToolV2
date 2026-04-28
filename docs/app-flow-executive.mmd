@@ -1,0 +1,45 @@
+%% High-level flow: Risk of Measles Outbreak dashboard (executive view)
+%% Renders in GitHub, VS Code Mermaid extension, or https://mermaid.live
+%% Top-to-bottom flow so order is always: Data → Analysis → Dashboard
+
+flowchart TB
+    subgraph inputs["Data inputs"]
+        A["CDC case reports - CSV"]
+        B["Vaccination Coverage by State - API"]
+        C["Measles Wastewater Signal - API"]
+    end
+
+    subgraph app["Analysis and Modeling"]
+        direction LR
+        D["Combine data"]
+        E["Model risk"]
+        F["Forecast"]
+        D --> E --> F
+    end
+
+    subgraph outputs["Dashboard"]
+        subgraph data_views["Data views"]
+            H["Historical trends"]
+            I["Vaccination coverage by state"]
+            J["Measles wastewater conc. vs reported cases"]
+        end
+        subgraph model_views["Model views"]
+            G["Nation outbreak risk"]
+            K["State risk levels"]
+            L["Short term forecast"]
+        end
+    end
+
+    subgraph ai["AI reports"]
+        O["Ollama"]
+        P["Generated narrative reports"]
+        O --> P
+    end
+
+    A --> D
+    B --> D
+    C --> D
+    D --> data_views
+    E --> model_views
+    F --> model_views
+    model_views --> O
