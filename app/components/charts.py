@@ -68,8 +68,8 @@ def ww_vs_nndss_dual_axis(merged_inner: pd.DataFrame) -> go.Figure:
         go.Scatter(
             x=merged_inner["year_week"],
             y=merged_inner["detection_frequency"].values,
-            name="Detection frequency (share of sites)",
-            line=dict(color="steelblue", width=2),
+            name="Wastewater detection rate",
+            line=dict(color="steelblue", width=3),
             mode="lines+markers",
             marker=dict(size=4),
         )
@@ -78,11 +78,12 @@ def ww_vs_nndss_dual_axis(merged_inner: pd.DataFrame) -> go.Figure:
         go.Scatter(
             x=merged_inner["year_week"],
             y=merged_inner["cases"].values,
-            name="Reported cases (NNDSS)",
+            name="Reported measles cases",
             yaxis="y2",
             line=dict(color="darkorange", width=2),
             mode="lines+markers",
             marker=dict(size=4),
+            opacity=0.8,
         )
     )
     fig.update_layout(

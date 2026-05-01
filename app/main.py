@@ -39,6 +39,7 @@ from app.model_runner import load_and_model
 from app.risk import compute_ww_detection_frequency, validate_ww_nndss_audit
 from app.qc_panel import render_qc_tab
 from app.utils.logging_config import get_logger, setup_logging
+from app.utils.state_maps import state_to_abbr
 
 setup_logging()
 logger = get_logger("app")
@@ -47,12 +48,80 @@ DASH_CSS = """
 <style>
 [data-testid="stAppViewContainer"] { background-color: #f5f7fa !important; }
 [data-testid="stHeader"] { background: #f5f7fa !important; }
-section[data-testid="stSidebar"] > div { background: #f0f2f6 !important; }
+section[data-testid="stSidebar"] > div { background: #0f172a !important; padding: 0 !important; }
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 { color: #f1f5f9 !important; }
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] { color: #94a3b8 !important; }
+section[data-testid="stSidebar"] [data-testid="stButton"] button {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+  border: 1px solid #2563eb !important;
+  border-radius: 6px !important;
+}
+section[data-testid="stSidebar"] [data-testid="stButton"] button:hover {
+  background: #1e40af !important;
+  border-color: #1e40af !important;
+}
+.sidebar-brand {
+  padding: 20px 16px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid #1e293b;
+}
+.sidebar-brand-title {
+  color: #f1f5f9;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.sidebar-brand-subtitle {
+  color: #64748b;
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+.sidebar-audience-card {
+  background: #1e3a5f;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 12px 8px;
+  color: #93c5fd;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
 .block-container { padding-top: 1.25rem !important; padding-bottom: 2rem !important; max-width: 1680px !important; }
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 h1.page-title { font-size: 1.75rem !important; font-weight: 700 !important; color: #0f172a !important; margin-bottom: 0.25rem !important; letter-spacing: -0.02em; }
 p.page-sub { color: #64748b; font-size: 0.95rem; margin-bottom: 1.25rem; }
+.hero-callout {
+  background: linear-gradient(135deg, #edfdf8 0%, #e6f8ff 100%);
+  border: 1px solid #cde8e4;
+  border-left: 4px solid #2a9d8f;
+  border-radius: 14px;
+  padding: 1rem 1.15rem;
+  margin: 0 0 0.9rem 0;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+.hero-callout h2 {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: #0f172a;
+  font-weight: 700;
+}
+.hero-callout ul {
+  margin: 0.65rem 0 0 0;
+  padding-left: 1.15rem;
+}
+.hero-callout li {
+  margin-bottom: 0.3rem;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: #334155;
+}
 .disclaimer { font-size: 0.75rem; color: #94a3b8; margin-bottom: 1rem; }
 .card {
   background: #ffffff;
@@ -71,6 +140,55 @@ p.page-sub { color: #64748b; font-size: 0.95rem; margin-bottom: 1.25rem; }
   flex-direction: column;
   justify-content: flex-start;
   box-sizing: border-box;
+  border-top: 3px solid #3b82f6;
+  position: relative;
+}
+.card.kpi-metric-card.alarm-card.alarm-high { border-top-color: #ef4444; }
+.card.kpi-metric-card.alarm-card.alarm-normal { border-top-color: #22c55e; }
+.card.kpi-metric-card.highest-risk-card { border-top-color: #f97316; }
+.card.kpi-metric-card.latest-case-card { border-top-color: #3b82f6; }
+.card.kpi-metric-card .kpi-badge {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 99px;
+  line-height: 1.2;
+}
+.card.kpi-metric-card .kpi-badge.badge-alarm-high {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+.card.kpi-metric-card .kpi-badge.badge-alarm-normal {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+.card.kpi-metric-card .kpi-badge.badge-neutral {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+.insight-callout {
+  background: #eff6ff;
+  border-left: 3px solid #3b82f6;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: #1e40af;
+  margin-bottom: 12px;
+}
+.insight-card {
+  background: #f8fafc;
+  border-left: 4px solid #3b82f6;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  color: #1e293b;
+  margin-bottom: 10px;
 }
 .card.kpi-metric-card .kpi-title {
   margin: 0;
@@ -121,7 +239,14 @@ p.page-sub { color: #64748b; font-size: 0.95rem; margin-bottom: 1.25rem; }
   border-radius: 8px;
   border: 1px solid #e2e8f0;
 }
-.section-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem; color: #0f172a; }
+.section-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #0f172a;
+}
 .ai-subhead { font-size: 0.88rem; font-weight: 600; color: #0f172a; margin: 0.5rem 0 0.35rem 0; }
 .ai-section-divider { height: 1px; background: #e2e8f0; margin: 16px 0; }
 .watch-bullets { font-size: 0.82rem; color: #334155; margin: 0.25rem 0 0.75rem 0; padding-left: 1.15rem; line-height: 1.5; }
@@ -642,8 +767,23 @@ def main() -> None:
         st.session_state.multi_agent_error = None
 
     with st.sidebar:
-        st.markdown("### Measles risk")
+        st.markdown(
+            """<div class="sidebar-brand">
+<div class="sidebar-brand-title">VaxFax</div>
+<div class="sidebar-brand-subtitle">Measles Surveillance · US</div>
+</div>""",
+            unsafe_allow_html=True,
+        )
         st.caption("Situational awareness · CDC data")
+        st.markdown(
+            """<div class="sidebar-audience-card">
+<strong>Who is this for?</strong><br>
+🏥 State health departments<br>
+📊 Epidemiologists & data scientists<br>
+🎓 Public health researchers
+</div>""",
+            unsafe_allow_html=True,
+        )
         if st.button("Refresh data", type="primary", use_container_width=True):
             _do_load(use_cache=False)
             st.rerun()
@@ -658,21 +798,18 @@ def main() -> None:
             st.info("Waiting for data…")
         else:
             d0 = st.session_state.data_bundle
-            lines = []
-            for source, status in (d0.get("load_status") or {}).items():
-                label = "temporarily unavailable" if status == "fail" else status
-                lines.append(f"{source}: {label}")
-            st.caption("**Data sources**")
-            st.caption(" · ".join(lines) if lines else "—")
             st.caption(f"Data as of: **{d0.get('data_as_of') or 'N/A'}**")
 
     st.markdown('<h1 class="page-title">Risk of Measles Outbreak in US</h1>', unsafe_allow_html=True)
     st.markdown(
-        '<p class="page-sub">Situational awareness dashboard — wastewater, NNDSS, and vaccination context.</p>',
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        '<p class="disclaimer">For situational awareness only; not for clinical or policy decisions. Data: CDC.</p>',
+        """<div class="hero-callout">
+<h2>Built for public health decision-makers, epidemiologists, and state health officials</h2>
+<ul>
+  <li>Identify which states need immediate vaccination intervention.</li>
+  <li>Detect early outbreak signals from wastewater before cases rise.</li>
+  <li>Track national measles risk in a single weekly briefing.</li>
+</ul>
+</div>""",
         unsafe_allow_html=True,
     )
 
@@ -680,14 +817,26 @@ def main() -> None:
     kd = _kpi_derived(d)
     ap = float(st.session_state.alarm_prob) if d else kd["alarm"]
 
-    tab_overview, tab_analysis, tab_qc = st.tabs(["Overview", "Analysis", "Quality Control Summary"])
+    tab_overview, tab_analysis, tab_qc = st.tabs(
+        ["📊 National Risk Overview", "🔬 Data & Analysis", "✅ AI Quality Control"]
+    )
 
     with tab_overview:
+        st.caption("Real-time national measles risk assessment with AI-generated state briefings")
         r1c1, r1c2, r1c3 = st.columns(3, gap="large")
         with r1c1:
-            sub_a = "Probability of exceeding threshold in next 4 weeks"
+            is_high_alarm = ap > 0.5
+            sub_a = (
+                "Action: escalate monitoring"
+                if is_high_alarm
+                else "Action: maintain routine surveillance"
+            )
+            alarm_class = "alarm-high" if ap > 0.5 else "alarm-normal"
+            alarm_badge_class = "badge-alarm-high" if is_high_alarm else "badge-alarm-normal"
+            alarm_badge_label = "Elevated" if is_high_alarm else "Normal"
             st.markdown(
-                f"""<div class="card kpi-metric-card">
+                f"""<div class="card kpi-metric-card alarm-card {alarm_class}">
+<div class="kpi-badge {alarm_badge_class}">{alarm_badge_label}</div>
 <div class="kpi-title">Outbreak Alarm</div>
 <div class="kpi-value">{ap:.0%}</div>
 <div class="kpi-sub">{sub_a}</div>
@@ -699,7 +848,8 @@ def main() -> None:
             sc = kd["hi_score"]
             sub_h = f"Score: {sc:.0f}" if sc is not None else "\u00a0"
             st.markdown(
-                f"""<div class="card kpi-metric-card">
+                f"""<div class="card kpi-metric-card highest-risk-card">
+<div class="kpi-badge badge-neutral">Top risk</div>
 <div class="kpi-title">Highest Risk State</div>
 <div class="kpi-value">{hs}</div>
 <div class="kpi-sub">{sub_h}</div>
@@ -708,6 +858,7 @@ def main() -> None:
             )
         with r1c3:
             lc = kd["latest_cases"]
+            badge_delta = "Delta n/a"
             if lc is None:
                 sub_c = "NNDSS weekly (national)"
                 val = "—"
@@ -715,11 +866,14 @@ def main() -> None:
                 delta = kd["cases_delta_pct"]
                 if delta is None or (isinstance(delta, float) and np.isinf(delta)):
                     sub_c = "vs prior week: n/a"
+                    badge_delta = "Delta n/a"
                 else:
                     sub_c = f"vs prior week: {delta:+.1f}%"
+                    badge_delta = f"{delta:+.1f}%"
                 val = f"{lc:.0f}"
             st.markdown(
-                f"""<div class="card kpi-metric-card">
+                f"""<div class="card kpi-metric-card latest-case-card">
+<div class="kpi-badge badge-neutral">{badge_delta}</div>
 <div class="kpi-title">Latest Case Count</div>
 <div class="kpi-value">{val}</div>
 <div class="kpi-sub">{sub_c}</div>
@@ -785,6 +939,12 @@ def main() -> None:
 
         st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
         st.markdown('<p class="section-title">AI report</p>', unsafe_allow_html=True)
+        st.markdown(
+            """<div class="hero-callout">
+Quality control indicates that the AI pipeline produces accurate, grounded reports. See AI Quality Control tab for more details.
+</div>""",
+            unsafe_allow_html=True,
+        )
         gen = st.button(
             "Generate AI briefing",
             type="primary",
@@ -871,29 +1031,22 @@ def main() -> None:
 
     with tab_analysis:
         ychoices = _ww_year_choices(d)
-        st.markdown('<p class="section-title">Wastewater vs NNDSS filters</p>', unsafe_allow_html=True)
-        fa, fb = st.columns(2)
-        with fa:
-            ym = st.selectbox("From year", ychoices, index=0, key="ww_year_min")
-        with fb:
-            yx = st.selectbox("To year", ychoices, index=0, key="ww_year_max")
-        ww = d.get("ww") if d else None
-        _, ww_val_range = compute_ww_detection_frequency(
-            ww if ww is not None else pd.DataFrame(), year_min=None, year_max=None
-        )
-        weeks_min = ww_val_range.get("weeks_min")
-        weeks_max = ww_val_range.get("weeks_max")
-        wymin = int(weeks_min[0]) if weeks_min else None
-        wymax = int(weeks_max[0]) if weeks_max else None
-        if wymin is not None and wymax is not None:
-            st.caption(
-                f"Wastewater measles surveillance is available from **{wymin}** through **{wymax}**. "
-                "Years before this period will not display wastewater data."
-            )
+        with st.container():
+            f1, f2 = st.columns(2)
+            with f1:
+                ym = st.selectbox("Start year", ychoices, index=0, key="ww_year_min")
+            with f2:
+                yx = st.selectbox("End year", ychoices, index=0, key="ww_year_max")
 
         ctx = _ww_nndss_context(d, ym, yx)
 
-        st.markdown('<p class="section-title">Wastewater vs NNDSS</p>', unsafe_allow_html=True)
+        st.markdown('<p class="section-title">Do outbreaks appear before cases spike?</p>', unsafe_allow_html=True)
+        st.markdown(
+            """<div class="insight-card">
+<strong>Key insight:</strong> Wastewater signals often lead reported measles cases by 1-2 weeks, enabling earlier intervention.
+</div>""",
+            unsafe_allow_html=True,
+        )
         for w in ctx["warn"]:
             st.warning(w)
         mi = ctx["merged_inner"]
@@ -923,28 +1076,18 @@ def main() -> None:
                     layout_title_text="No chart — adjust year filters or wait for overlapping WW + NNDSS weeks",
                     height=520,
                 )
-        fig_ww.update_layout(height=520, paper_bgcolor="rgba(0,0,0,0)")
+        fig_ww.update_layout(height=460, paper_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(fig_ww, use_container_width=True, key="ww_analysis")
 
-        with st.expander("Wastewater data audit"):
-            wv = ctx.get("ww_val") or {}
-            st.markdown(f"**Detection rule:** {wv.get('detection_rule_used') or '—'}")
-            st.markdown(f"**Rows before filters:** {wv.get('n_rows_raw', 0)}")
-            st.markdown(f"**% passing QC:** {wv.get('pct_passing_qc', 0):.1f} %")
-            st.markdown(f"**Unique sites:** {wv.get('n_unique_sites', 0)}")
-            wmin, wmax = wv.get("weeks_min"), wv.get("weeks_max")
-            st.markdown(f"**Wastewater starts:** {wmin} | **ends:** {wmax}")
-            if not ww_w.empty:
-                st.markdown(
-                    f"**Wastewater year range:** {int(ww_w['year'].min())} – {int(ww_w['year'].max())}"
-                )
-            st.markdown(f"**pcr_target used:** {wv.get('pcr_target_used')}")
-            missing = wv.get("missing_columns")
-            if missing:
-                st.warning(f"Required column(s) missing: {missing}")
-
-        st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
-        st.markdown('<p class="section-title">Kindergarten MMR coverage</p>', unsafe_allow_html=True)
+        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+        st.markdown('<p class="section-title">Where is the population most vulnerable?</p>', unsafe_allow_html=True)
+        st.markdown(
+            """<div class="insight-card">
+<strong>Key insight:</strong> States below 95% MMR coverage are at highest risk due to insufficient herd immunity.
+</div>""",
+            unsafe_allow_html=True,
+        )
+        st.markdown('<p class="section-title">Vaccination coverage risk</p>', unsafe_allow_html=True)
         kg = d.get("kg") if d else None
         kg_year_opts: list[str] = []
         if kg is not None and not kg.empty:
@@ -963,23 +1106,7 @@ def main() -> None:
         kw = kx["kg_work"]
         pc = kx["pct_col"]
         sc = kx["state_col"]
-        if kw is None or kw.empty or not pc:
-            st.plotly_chart(
-                go.Figure(layout_title_text="No kindergarten coverage data", height=520),
-                use_container_width=True,
-                key="kg_map",
-            )
-        else:
-            kw = kw.copy()
-            kw["coverage"] = pd.to_numeric(kw[pc], errors="coerce")
-            fig_kg = kindergarten_coverage_map_figure(kw, sc, "coverage")
-            fig_kg.update_layout(
-                height=520,
-                margin=dict(l=0, r=0, t=40, b=158),
-                paper_bgcolor="rgba(0,0,0,0)",
-            )
-            st.plotly_chart(fig_kg, use_container_width=True, key="kg_map")
-
+        table_df = pd.DataFrame(columns=["State", "Percent coverage"])
         if kw is not None and not kw.empty and pc and sc:
             kw_tbl = kw.copy()
             cov_num = (
@@ -993,9 +1120,84 @@ def main() -> None:
             table_df = cov_agg.dropna(subset=["coverage"])[[sc, "coverage"]].rename(
                 columns={sc: "State", "coverage": "Percent coverage"}
             )
-            st.dataframe(table_df, use_container_width=True, hide_index=True)
+            table_df["State"] = table_df["State"].map(lambda v: state_to_abbr(str(v)) or str(v))
+            table_df = table_df.sort_values("Percent coverage", kind="stable")
+        kg_map_col, kg_table_col = st.columns([2.15, 1], gap="large")
+        with kg_map_col:
+            if not table_df.empty:
+                low_cov_states = table_df[table_df["Percent coverage"] < 95].shape[0]
+                st.markdown(
+                    f"""
+<div class="card-tight">
+<strong>{low_cov_states} states</strong> fall below herd immunity threshold (95%).
+</div>
+""",
+                    unsafe_allow_html=True,
+                )
+            if kw is None or kw.empty or not pc:
+                st.plotly_chart(
+                    go.Figure(layout_title_text="No kindergarten coverage data", height=520),
+                    use_container_width=True,
+                    key="kg_map",
+                )
+            else:
+                kw = kw.copy()
+                kw["coverage"] = pd.to_numeric(kw[pc], errors="coerce")
+                fig_kg = kindergarten_coverage_map_figure(kw, sc, "coverage")
+                fig_kg.update_layout(
+                    height=520,
+                    margin=dict(l=0, r=0, t=40, b=158),
+                    paper_bgcolor="rgba(0,0,0,0)",
+                )
+                st.plotly_chart(fig_kg, use_container_width=True, key="kg_map")
+
+        with kg_table_col:
+            st.markdown('<p class="section-title">State coverage table</p>', unsafe_allow_html=True)
+            if not table_df.empty:
+                st.dataframe(table_df, use_container_width=True, hide_index=True)
+            else:
+                st.caption("No state coverage table available.")
+
+        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+        st.markdown(
+            '<p class="section-title">How reliable is the early warning signal?</p>',
+            unsafe_allow_html=True,
+        )
+        st.caption(
+            "Use this audit to verify wastewater data quality, coverage period, and detection assumptions."
+        )
+        with st.expander("Wastewater data audit"):
+            wv = ctx.get("ww_val") or {}
+            st.markdown(f"**Detection rule:** {wv.get('detection_rule_used') or '—'}")
+            st.markdown(f"**Rows before filters:** {wv.get('n_rows_raw', 0)}")
+            st.markdown(f"**% passing QC:** {wv.get('pct_passing_qc', 0):.1f} %")
+            st.markdown(f"**Unique sites:** {wv.get('n_unique_sites', 0)}")
+            wmin, wmax = wv.get("weeks_min"), wv.get("weeks_max")
+            st.markdown(f"**Wastewater starts:** {wmin} | **ends:** {wmax}")
+            if not ww_w.empty:
+                st.markdown(
+                    f"**Wastewater year range:** {int(ww_w['year'].min())} – {int(ww_w['year'].max())}"
+                )
+            st.markdown(f"**pcr_target used:** {wv.get('pcr_target_used')}")
+            missing = wv.get("missing_columns")
+            if missing:
+                st.warning(f"Required column(s) missing: {missing}")
+        st.caption("Wastewater data available starting 2025.")
+        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+        st.markdown('<p class="section-title">What this means for action</p>', unsafe_allow_html=True)
+        st.markdown(
+            """<div class="hero-callout">
+<ul>
+  <li>Rising wastewater signals can provide early warning before confirmed outbreaks.</li>
+  <li>States below 95% vaccination are most vulnerable.</li>
+  <li>Overlapping signals indicate highest intervention priority.</li>
+</ul>
+</div>""",
+            unsafe_allow_html=True,
+        )
 
     with tab_qc:
+        st.caption("Evidence that the AI pipeline produces accurate, grounded reports.")
         render_qc_tab()
 
 

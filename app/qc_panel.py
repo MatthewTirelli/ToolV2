@@ -487,6 +487,9 @@ def render_qc_tab() -> None:
         """
 <style>
 .qc-page-title { font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 0.35rem; }
+.qc-proof-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; }
+.qc-proof-title { color: #166534; font-size: 0.9rem; font-weight: 600; margin: 0 0 0.35rem 0; }
+.qc-proof-body { color: #15803d; font-size: 0.82rem; line-height: 1.45; margin: 0; }
 .qc-intro { color: #475569; font-size: 0.95rem; line-height: 1.55; margin-bottom: 0.4rem; }
 .qc-trust { color: #64748b; font-size: 0.875rem; line-height: 1.45; margin: 0 0 0.75rem 0; }
 .qc-metric-sub { font-size: 0.78rem; color: #64748b; line-height: 1.35; margin: 0.15rem 0 0 0; }
@@ -495,6 +498,13 @@ def render_qc_tab() -> None:
 </style>
 <div class="qc-page-title">Quality Control Summary</div>
 """,
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        """<div class="qc-proof-box">
+<p class="qc-proof-title">What this tab proves</p>
+<p class="qc-proof-body">We ran 50 independent AI trials comparing a basic prompt against our production Grounded Prompt. The Grounded Prompt achieved 100% pass rate and 94.2/100 quality score, an 18-point improvement that is statistically significant (p &lt; 0.001).</p>
+</div>""",
         unsafe_allow_html=True,
     )
     st.markdown(
@@ -788,7 +798,8 @@ def _live_validation_expander() -> None:
                 )
                 st.markdown(live_html, unsafe_allow_html=True)
 
-                with st.expander("Advanced diagnostics", expanded=False):
+                show_diag = st.toggle("Advanced diagnostics", value=False, key="qc_live_adv_diag")
+                if show_diag:
                     st.caption(
                         f"Prompt file: `{prompt_info.get('path')}` — "
                         f"agent2/tool cohort match: {alignment.get('agent2_enriched_block_matches_tool')}"

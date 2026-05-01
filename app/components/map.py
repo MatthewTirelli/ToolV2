@@ -74,12 +74,18 @@ def state_risk_map_figure(
         hovertemplate="%{hovertext}<extra></extra>",
         hovertext=hover_texts,
     )
-    fig.update_geos(scope="usa", showlakes=True, lakecolor="rgb(255,255,255)")
+    fig.update_geos(
+        scope="usa",
+        showlakes=True,
+        lakecolor="rgb(255,255,255)",
+        # Slightly inset geo domain so the map never touches/clips right edge in narrow containers.
+        domain=dict(x=[0.01, 0.99], y=[0.0, 1.0]),
+    )
     # Horizontal colorbar sits below the map (paper y < 0) so the geo stays full-size; bottom margin reserves space.
     fig.update_layout(
         title=dict(text="State risk score by state", x=0, xanchor="left"),
         height=420,
-        margin=dict(l=0, r=0, t=50, b=128),
+        margin=dict(l=0, r=10, t=50, b=128),
         coloraxis_colorbar=dict(
             title="Risk score",
             tickformat="d",
