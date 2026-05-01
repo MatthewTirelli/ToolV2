@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "locale": ".UTF-8",
+  "metadata": {
+    "appmode": "python-streamlit",
+    "entrypoint": "main"
+  },
+  "python": {
+    "version": "3.14.2",
+    "package_manager": {
+      "name": "pip",
+      "version": "25.0.1",
+      "package_file": "requirements.txt"
+    }
+  },
+  "files": {
+    ".streamlit/config.toml": {
+      "checksum": "9bbdf78a18970ee7014b6d45e62ee40a"
+    },
+    "__init__.py": {
+      "checksum": "09c21f7ede69e7ee48a41b6b65312e96"
+    },
+    "assets/.gitkeep": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "assets/qc/qc_results.csv": {
+      "checksum": "b39c8f2452b241b89b9efea57399eb96"
+    },
+    "assets/qc/qc_summary.md": {
+      "checksum": "0ebc4d43c3e2a7d605282f5ce508465b"
+    },
+    "components/__init__.py": {
+      "checksum": "eca3748a55dbf846a396dae90de8c85c"
+    },
+    "components/charts.py": {
+      "checksum": "ed9fb71be000ee92c710408c962bb291"
+    },
+    "components/kpi_card.py": {
+      "checksum": "db06cade7e281c9a97a45932653b0232"
+    },
+    "components/map.py": {
+      "checksum": "00326b2dcd0af314e8e25b46de884224"
+    },
+    "kg_helpers.py": {
+      "checksum": "a0ea73c970668c8c33b1bab2f57d0cc0"
+    },
+    "loaders.py": {
+      "checksum": "dfb0f3e6f24cf60299494adf0bcfdb60"
+    },
+    "main.py": {
+      "checksum": "b06caeb0b190a9a5865e1acbceca0118"
+    },
+    "model_runner.py": {
+      "checksum": "d25b5ac8ca7b38caf647ca74b8c82030"
+    },
+    "ollama_client.py": {
+      "checksum": "4bd6cb2b0b0916304077a7447f27c258"
+    },
+    "pages/__init__.py": {
+      "checksum": "a93d3f3592efcaeb2e4c384e592ed585"
+    },
+    "qc_panel.py": {
+      "checksum": "3b894202a7084052aa13a7acc3fec806"
+    },
+    "requirements.txt": {
+      "checksum": "e9f8357c9530cd7cd9a599bfbc8f6444"
+    },
+    "risk.py": {
+      "checksum": "002d492c27f9c928fb9f72671aa74cc1"
+    },
+    "utils/__init__.py": {
+      "checksum": "9b2215a372d49f696da97effeeb9ebb1"
+    },
+    "utils/logging_config.py": {
+      "checksum": "1b4a2283c1fa93a5ad35cc4dd73e2df8"
+    },
+    "utils/state_maps.py": {
+      "checksum": "34612fb1070ca4ce90b51fc5ce3fa1f3"
+    }
+  }
+}
