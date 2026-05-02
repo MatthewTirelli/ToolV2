@@ -53,9 +53,6 @@
     "model_runner.py": {
       "checksum": "d25b5ac8ca7b38caf647ca74b8c82030"
     },
-    "ollama_client.py": {
-      "checksum": "4bd6cb2b0b0916304077a7447f27c258"
-    },
     "pages/__init__.py": {
       "checksum": "a93d3f3592efcaeb2e4c384e592ed585"
     },
